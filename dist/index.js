@@ -95,11 +95,8 @@ var RemoveKeyAction = function (state, action) {
     delete stateCopy[key];
     return stateCopy;
 };
-var ClearAction = function (state, action) {
-    var defaultValues = (action.payload || {}).defaultValues;
-    var stateCopy = __assign({}, state);
-    delete stateCopy.logged;
-    return __assign({}, (defaultValues || {}));
+var ClearAction = function () {
+    return {};
 };
 
 var createSessionSlice = function (_a) {
@@ -124,10 +121,15 @@ var StorageDriver = /** @class */ (function () {
         };
         this.persistData = function (data) {
             if (_this.driver === 'cookie') {
-                _this.cookies.set('app-session', JSON.stringify(data), {
-                    secure: true,
-                    httpOnly: true
-                });
+                if (JSON.stringify(data) === '{}') {
+                    _this.cookies.remove('app-session');
+                }
+                else {
+                    _this.cookies.set('app-session', JSON.stringify(data), {
+                        secure: true,
+                        httpOnly: true
+                    });
+                }
             }
             else {
                 localStorage.setItem('app-session', JSON.stringify(data));
@@ -154,7 +156,6 @@ var SessionProvider = function (_a) {
     var children = _a.children, initialValues = _a.initialValues, driver = _a.driver;
     storageDriver.setDriver(driver || 'localStorage');
     var storedData = storageDriver.getData();
-    console.log('Im a session provider', storedData);
     var slice = createSessionSlice({ initialValues: __assign(__assign({}, initialValues), storedData) });
     var store = toolkit.configureStore({
         reducer: slice.reducer

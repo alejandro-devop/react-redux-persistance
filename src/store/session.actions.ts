@@ -31,9 +31,6 @@ export const RemoveKeyAction: CaseReducer<State, PayloadAction<{ key: string }>>
 export const ClearAction: CaseReducer<
     State,
     PayloadAction<{ defaultValues?: { [k: string]: any } }>
-> = (state, action) => {
-    const { defaultValues } = action.payload || {}
-    const stateCopy = { ...state }
-    delete stateCopy.logged
-    return { ...(defaultValues || {}) }
+> = () => {
+    return {}
 }

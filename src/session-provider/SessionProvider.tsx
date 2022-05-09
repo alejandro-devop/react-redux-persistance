@@ -15,7 +15,6 @@ interface SessionProviderProps {
 const SessionProvider: React.FC<SessionProviderProps> = ({ children, initialValues, driver }) => {
     storageDriver.setDriver(driver || 'localStorage')
     const storedData = storageDriver.getData()
-    console.log('Im a session provider', storedData)
     const slice = createSessionSlice({ initialValues: { ...initialValues, ...storedData } })
     const store = configureStore({
         reducer: slice.reducer

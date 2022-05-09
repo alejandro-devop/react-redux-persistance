@@ -15,10 +15,14 @@ class StorageDriver {
 
     persistData = (data: any) => {
         if (this.driver === 'cookie') {
-            this.cookies.set('app-session', JSON.stringify(data), {
-                secure: true,
-                httpOnly: true
-            })
+            if (JSON.stringify(data) === '{}') {
+                this.cookies.remove('app-session')
+            } else {
+                this.cookies.set('app-session', JSON.stringify(data), {
+                    secure: true,
+                    httpOnly: true
+                })
+            }
         } else {
             localStorage.setItem('app-session', JSON.stringify(data))
         }
