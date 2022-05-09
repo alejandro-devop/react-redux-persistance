@@ -1,4 +1,4 @@
-# @triko/redux-persistance
+# @alejandro.devop/redux-persistance
 
 ## Index
 * [Installation](#installation)
@@ -8,7 +8,7 @@
 ### Installation
 
 ```
-yarn add @triko/redux-persistance
+yarn add @alejandro.devop/redux-persistance
 ```
 
 
