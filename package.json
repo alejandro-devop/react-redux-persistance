@@ -37,6 +37,7 @@
     "@testing-library/react": "^12.1.4",
     "@testing-library/react-hooks": "^7.0.2",
     "@testing-library/user-event": "^13.5.0",
+    "@types/cookie": "^0.5.1",
     "@types/enzyme": "^3.10.11",
     "@types/jest": "^26.0.22",
     "@types/react": "^17.0.3",
@@ -68,6 +69,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.0",
+    "react-cookie": "^4.1.1",
     "react-redux": "^7.2.6",
     "redux": "^4.1.2"
   }

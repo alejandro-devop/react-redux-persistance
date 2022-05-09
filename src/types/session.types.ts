@@ -32,3 +32,5 @@ export type SessionContextType = {
     removeKey: (key: string) => void
     clear: (defValues: any) => void
 }
+
+export type DriverStorageType = 'localStorage' | 'cookie'

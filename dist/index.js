@@ -5,10 +5,12 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var React = require('react');
 var reactRedux = require('react-redux');
 var toolkit = require('@reduxjs/toolkit');
+var Cookies = require('universal-cookie');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
 var React__default = /*#__PURE__*/_interopDefaultLegacy(React);
+var Cookies__default = /*#__PURE__*/_interopDefaultLegacy(Cookies);
 
 var SessionContext = React__default["default"].createContext({});
 var SessionContextProvider = SessionContext.Provider;
@@ -46,7 +48,7 @@ var __assign = function() {
 };
 
 var ReduxWrapper = function (_a) {
-    var children = _a.children, slice = _a.slice, onDataChange = _a.onDataChange;
+    var children = _a.children, slice = _a.slice, onDataChange = _a.onDataChange, driver = _a.driver;
     var dispatch = reactRedux.useDispatch();
     var store = reactRedux.useStore();
     var currentState = reactRedux.useSelector(function (state) {
@@ -69,6 +71,7 @@ var ReduxWrapper = function (_a) {
         onDataChange(store.getState());
     });
     return (React__default["default"].createElement(SessionContextProvider, { value: {
+            driver: driver,
             setKey: setKey,
             setAll: setAll,
             removeKey: removeKey,
@@ -115,24 +118,43 @@ var createSessionSlice = function (_a) {
 
 var StorageDriver = /** @class */ (function () {
     function StorageDriver() {
+        var _this = this;
+        this.setDriver = function (driver) {
+            _this.driver = driver;
+        };
         this.persistData = function (data) {
-            localStorage.setItem('app-session', JSON.stringify(data));
+            if (_this.driver === 'cookie') {
+                _this.cookies.set('app-session', JSON.stringify(data), {
+                    secure: true,
+                    httpOnly: true
+                });
+            }
+            else {
+                localStorage.setItem('app-session', JSON.stringify(data));
+            }
         };
         this.getData = function () {
-            var data = localStorage.getItem('app-session');
-            if (data) {
-                return JSON.parse(data);
+            var data = '';
+            if (_this.driver === 'cookie') {
+                data = _this.cookies.get('app-session');
+                return data;
             }
-            return {};
+            else {
+                data = localStorage.getItem('app-session');
+                return data ? JSON.parse(data) : {};
+            }
         };
+        this.cookies = new Cookies__default["default"]();
     }
     return StorageDriver;
 }());
 var storageDriver = new StorageDriver();
 
 var SessionProvider = function (_a) {
-    var children = _a.children, initialValues = _a.initialValues;
+    var children = _a.children, initialValues = _a.initialValues, driver = _a.driver;
+    storageDriver.setDriver(driver || 'localStorage');
     var storedData = storageDriver.getData();
+    console.log('Im a session provider', storedData);
     var slice = createSessionSlice({ initialValues: __assign(__assign({}, initialValues), storedData) });
     var store = toolkit.configureStore({
         reducer: slice.reducer
@@ -141,7 +163,7 @@ var SessionProvider = function (_a) {
         storageDriver.persistData(newData);
     };
     return (React__default["default"].createElement(reactRedux.Provider, { store: store },
-        React__default["default"].createElement(ReduxWrapper, { slice: slice, initialValues: __assign({}, initialValues), onDataChange: onDataChange }, children)));
+        React__default["default"].createElement(ReduxWrapper, { driver: driver, slice: slice, initialValues: __assign({}, initialValues), onDataChange: onDataChange }, children)));
 };
 
 exports["default"] = SessionProvider;

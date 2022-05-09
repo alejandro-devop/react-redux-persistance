@@ -21,5 +21,5 @@ export default {
             }
         })
     ],
-    external: ['react', 'react-dom', 'redux', '@reduxjs/toolkit', 'react-redux']
+    external: ['react', 'react-dom', 'redux', '@reduxjs/toolkit', 'react-redux', 'universal-cookie']
 }

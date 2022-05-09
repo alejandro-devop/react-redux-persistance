@@ -25,3 +25,4 @@ export declare type SessionContextType = {
     removeKey: (key: string) => void;
     clear: (defValues: any) => void;
 };
+export declare type DriverStorageType = 'localStorage' | 'cookie';
