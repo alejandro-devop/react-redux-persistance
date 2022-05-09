@@ -1,6 +1,6 @@
 {
   "name": "@alejandro.devop/redux-persistance",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React HTTP Client specially for JSON Apis",
   "main": "dist/index.js",
   "module": "dist/index.js",
